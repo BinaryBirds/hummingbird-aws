@@ -1,27 +1,25 @@
-// swift-tools-version:5.5
-// The swift-tools-version declares the minimum version of Swift required to build this package.
-
+// swift-tools-version:5.7
 import PackageDescription
 
 let package = Package(
     name: "hummingbird-aws",
     platforms: [
-       .macOS(.v10_15)
+       .macOS(.v10_15),
     ],
     products: [
-        .library(name: "AWS", targets: ["AWS"]),
+        .library(name: "HummingbirdAWS", targets: ["HummingbirdAWS"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/hummingbird-project/hummingbird.git", from: "1.0.0"),
-        .package(url: "https://github.com/soto-project/soto.git", from: "6.2.0")
+        .package(url: "https://github.com/hummingbird-project/hummingbird", from: "1.4.0"),
+        .package(url: "https://github.com/soto-project/soto-core", from: "6.5.0"),
     ],
     targets: [
-        .target(name: "AWS", dependencies: [
+        .target(name: "HummingbirdAWS", dependencies: [
             .product(name: "Hummingbird", package: "hummingbird"),
-            .product(name: "SotoSES", package: "soto"),
+            .product(name: "SotoCore", package: "soto-core"),
         ]),
-        .testTarget(name: "AWSTests", dependencies: [
-            .target(name: "AWS"),
+        .testTarget(name: "HummingbirdAWSTests", dependencies: [
+            .target(name: "HummingbirdAWS"),
         ])
     ]
 )

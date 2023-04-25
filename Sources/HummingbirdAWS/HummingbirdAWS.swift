@@ -1,26 +1,20 @@
-import Foundation
 import Hummingbird
 import SotoCore
 
 extension HBApplication {
 
-    /// AWS  extension for Humminbird
+    /// AWS  extension
     public struct AWS {
 
         public var client: AWSClient {
             get {
                 if !app.extensions.exists(\.aws.client) {
-
-                    let logger = Logger(label: "aws-logger")
-                    let env = ProcessInfo.processInfo.environment
+                    let logger = Logger(label: "hummingbird-aws-logger")
 
                     app.extensions.set(
                         \.aws.client,
                         value: .init(
-                            credentialProvider: .static(
-                                accessKeyId: env["AWS_ACCESS_KEY"]!,
-                                secretAccessKey: env["AWS_ACCESS_SECRET"]!
-                            ),
+                            credentialProvider: .default,
                             httpClientProvider: .createNewWithEventLoopGroup(
                                 app.eventLoopGroup
                             ),
@@ -40,5 +34,6 @@ extension HBApplication {
         let app: HBApplication
     }
 
+    /// AWS extension
     public var aws: AWS { .init(app: self) }
 }
