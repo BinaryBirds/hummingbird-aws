@@ -7,6 +7,7 @@ final class HummingbirdAWSTests: XCTestCase {
 
     func testGet() async throws {
         let app = HBApplication()
+        app.aws.useDefaultClient()
         XCTAssertNotNil(app.aws.client.credentialProvider as? RuntimeSelectorCredentialProvider)
     }
     
