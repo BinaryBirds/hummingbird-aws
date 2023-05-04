@@ -26,15 +26,14 @@ import HummingbirdAWS
 
 let app = HBApplication()
 
-// get default client
-let client = app.aws.client
-
+// setup default client 
+app.services.setUpBasicAWSService(eventLoopGroup: app.eventLoopGroup)
 
 // set custom client
-app.aws.client = .init(
+app.services.aws = .init(
     credentialProvider: .static(
-        accessKeyId: "", 
-        secretAccessKey: ""
+        accessKeyId: "foo",
+        secretAccessKey: "bar"
     ),
     retryPolicy: .noRetry,
     middlewares: [],
@@ -42,9 +41,11 @@ app.aws.client = .init(
         requestLogLevel: .critical,
         errorLogLevel: .critical
     ),
-    httpClientProvider: .createNewWithEventLoopGroup(
-        app.eventLoopGroup
-    ),
+    httpClientProvider: .createNewWithEventLoopGroup(app.eventLoopGroup),
     logger: app.logger
 )
+
+// get aws client
+let client = app.aws
+let client = req.aws
 ```
