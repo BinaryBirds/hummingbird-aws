@@ -4,18 +4,20 @@ import PackageDescription
 let package = Package(
     name: "hummingbird-aws",
     platforms: [
-       .macOS(.v10_15),
+       .macOS(.v12),
     ],
     products: [
         .library(name: "HummingbirdAWS", targets: ["HummingbirdAWS"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/hummingbird-project/hummingbird", from: "1.4.0"),
+        .package(url: "https://github.com/hummingbird-project/hummingbird", from: "1.5.0"),
+        .package(url: "https://github.com/feathercms/hummingbird-services", branch: "main"),
         .package(url: "https://github.com/soto-project/soto-core", from: "6.5.0"),
     ],
     targets: [
         .target(name: "HummingbirdAWS", dependencies: [
             .product(name: "Hummingbird", package: "hummingbird"),
+            .product(name: "HummingbirdServices", package: "hummingbird-services"),
             .product(name: "SotoCore", package: "soto-core"),
         ]),
         .testTarget(name: "HummingbirdAWSTests", dependencies: [

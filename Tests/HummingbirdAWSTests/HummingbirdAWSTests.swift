@@ -7,14 +7,17 @@ final class HummingbirdAWSTests: XCTestCase {
 
     func testGet() async throws {
         let app = HBApplication()
-        app.aws.useDefaultClient()
-        XCTAssertNotNil(app.aws.client.credentialProvider as? RuntimeSelectorCredentialProvider)
+        app.services.setUpBasicAWSService(eventLoopGroup: app.eventLoopGroup)
+        XCTAssertNotNil(app.aws.credentialProvider as? RuntimeSelectorCredentialProvider)
     }
-    
+
     func testSet() async throws {
         let app = HBApplication()
-        app.aws.client = .init(
-            credentialProvider: .static(accessKeyId: "", secretAccessKey: ""),
+        app.services.aws = .init(
+            credentialProvider: .static(
+                accessKeyId: "foo",
+                secretAccessKey: "bar"
+            ),
             retryPolicy: .noRetry,
             middlewares: [],
             options: .init(
@@ -25,6 +28,6 @@ final class HummingbirdAWSTests: XCTestCase {
             logger: app.logger
         )
         
-        XCTAssertNotNil(app.aws.client.credentialProvider as? StaticCredential)
+        XCTAssertNotNil(app.aws.credentialProvider as? StaticCredential)
     }
 }

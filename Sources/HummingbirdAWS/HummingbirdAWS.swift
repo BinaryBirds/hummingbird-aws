@@ -1,47 +1,53 @@
 import Hummingbird
+import HummingbirdServices
 import SotoCore
 
-extension HBApplication {
+public extension HBApplication.Services {
 
-    /// AWS  extension
-    public struct AWS {
-
-        let app: HBApplication
-
-        /// The shared AWS client instance, should be created at application startup
-        public var client: AWSClient {
-            get {
-                if !app.extensions.exists(\.aws.client) {
-                    if !app.extensions.exists(\.aws.client) {
-                        fatalError("AWS client is not configured.")
-                    }
-                }
-                return app.extensions.get(\.aws.client)
-            }
-            nonmutating set {
-                app.extensions.set(\.aws.client, value: newValue) { client in
-                    try client.syncShutdown()
-                }
-            }
+    /// aws client as a service
+    var aws: AWSClient {
+        get {
+            get(\.services.aws, "AWS client is not configured")
         }
-        
-        /// Creates the default AWS client as an extension
-        public func useDefaultClient() {
-            let logger = Logger(label: "hummingbird-aws-logger")
-
-            app.extensions.set(
-                \.aws.client,
-                value: .init(
-                    credentialProvider: .default,
-                    httpClientProvider: .createNewWithEventLoopGroup(
-                        app.eventLoopGroup
-                    ),
-                    logger: logger
-                )
-            )
+        nonmutating set {
+            set(\.services.aws, newValue) { client in
+                try client.syncShutdown()
+            }
         }
     }
 
-    /// AWS extension
-    public var aws: AWS { .init(app: self) }
+    /// creates a basic aws client using a new http client provider with an event loop group
+    func setUpBasicAWSService(
+        credentialProvider: CredentialProviderFactory = .default,
+        eventLoopGroup: EventLoopGroup,
+        logger: Logger = .init(label: "aws-service")
+    ) {
+        aws = .init(
+            credentialProvider: credentialProvider,
+            options: .init(
+                requestLogLevel: logger.logLevel,
+                errorLogLevel: logger.logLevel
+            ),
+            httpClientProvider: .createNewWithEventLoopGroup(
+                eventLoopGroup
+            ),
+            logger: logger
+        )
+    }
+}
+
+public extension HBApplication {
+
+    /// aws client service
+    var aws: AWSClient {
+        services.aws
+    }
+}
+
+public extension HBRequest {
+
+    /// aws client service
+    var aws: AWSClient {
+        application.services.aws
+    }
 }
