@@ -9,7 +9,7 @@ A [Hummingbird](https://github.com/hummingbird-project/hummingbird) extension us
 Add the following entry in your `Package.swift` to start using `HummingbirdAWS`:
 
 ```swift
-.package(url: "https://github.com/feathercms/hummingbird-aws", from: "1.0.0"),
+.package(url: "https://github.com/binarybirds/hummingbird-aws", from: "1.0.0"),
 ```
 
 and `HummingbirdAWS` dependency to your target:

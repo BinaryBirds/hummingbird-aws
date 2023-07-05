@@ -20,7 +20,7 @@ public extension HBApplication.Services {
     func setUpBasicAWSService(
         credentialProvider: CredentialProviderFactory = .default,
         eventLoopGroup: EventLoopGroup,
-        logger: Logger = .init(label: "aws-service")
+        logger: Logger = .init(label: "hb-aws-client")
     ) {
         aws = .init(
             credentialProvider: credentialProvider,
